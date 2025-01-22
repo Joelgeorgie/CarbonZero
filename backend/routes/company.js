@@ -63,4 +63,46 @@ companyRouter.post('/signup', async (req, res) => {
     }
 });
 
+// Login route
+companyRouter.post('/login', async (req, res) => {
+    // Zod schema for validating login request
+    const loginSchema = zod.object({
+        publicKey: zod.string().min(1, "Public key is required"),
+        password: zod.string().min(6, "Password must be at least 6 characters"),
+    });
+
+    try {
+        // Validate request body
+        const { publicKey, password } = loginSchema.parse(req.body);
+
+        // Find company by publicKey
+        const company = await Company.findOne({ publicKey });
+        if (!company) {
+            return res.status(404).json({ message: "Company not found" });
+        }
+
+        // Check if password matches
+        if (company.password !== password) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { name: company.name, publicKey: company.publicKey, czTotal: company.czTotal },
+            JWT_SECRET // Import secret from config
+        );
+
+        res.status(200).json({ 
+            message: "Login successful",
+            token
+        });
+    } catch (error) {
+        if (error instanceof zod.ZodError) {
+            return res.status(400).json({ message: "Validation failed", errors: error.errors });
+        }
+        console.error("Error during login:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 module.exports = companyRouter;
