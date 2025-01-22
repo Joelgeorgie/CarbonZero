@@ -1,0 +1,31 @@
+joel@INSPIRON:~$ spl-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb create-token --enable-metadata carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w.json
+Creating token carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w under program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+To initialize metadata inside the mint, please run `spl-token initialize-metadata carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w <YOUR_TOKEN_NAME> <YOUR_TOKEN_SYMBOL> <YOUR_TOKEN_URI>`, and sign with the mint authority.
+
+Address:  carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w
+Decimals:  9
+
+Signature: 5hJXQvQzMjAQw1YtWmS9cqeMcUvbKbzpG4GkGg7dtohJoMbe9yimCeCH31Nxu4KSV4HmvQ1y9kUSFcMn4xmJNXSH
+
+joel@INSPIRON:~$ git add .
+fatal: not a git repository (or any of the parent directories): .git
+joel@INSPIRON:~$ spl-token initialize-metadata carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w CarbonZero CZ https://raw.githubusercontent.com/Joelgeorgie/CarbonZero/main/metadata/metadata.json
+
+Signature: 2PFAZ6AhnHwXu78Xc1T2G8rCJjeNizAL6jnucYdMzoKXtoQHepwn5k5yfW6LdyyugUu4sbsM7KWUZbBko5ixZApA
+
+joel@INSPIRON:~$ spl-token create-account carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w
+Creating account FMGfnLvMnPZrBwxeArj2vUXfn9s2ZPbty22eZDwZ58CB
+
+Signature: 2pCBspkF1wzZTo5dhKs1uXpBw4qKjeTWEL1hHGsxmUjyWo2cZ52SQSVyJrVda9BKY6dBgFDEqCvf4fyJ4w3ABDkz
+
+joel@INSPIRON:~$ spl-token mint  carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w 10000
+Minting 10000 tokens
+  Token: carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w
+  Recipient: FMGfnLvMnPZrBwxeArj2vUXfn9s2ZPbty22eZDwZ58CB
+
+Signature: 3JYqEQvNG5ZJ28QyAU3Gf2ZMTmZzx8BzXffM3AkVF2XDqdUfazTFhZbqNFXJpWC1tvnCbPXvw86yvCMdzQiZFLna
+
+joel@INSPIRON:~$ spl-token accounts
+Token                                         Balance
+-----------------------------------------------------
+carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w   10000
