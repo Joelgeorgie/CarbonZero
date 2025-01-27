@@ -4,10 +4,14 @@ const jwt = require('jsonwebtoken');
 const { Company } = require('../db');
 const { JWT_SECRET } = require('../config');
 const companyRouter = express.Router();
+const createTokenAccount = require('../handlers/createTokenAccount');
+
+
+
 
 // Test route
 companyRouter.get('/', (req, res) => {
-    console.log("Company Router Working");
+    console.log("Company Router Working fine");
     res.end();
 });
 
@@ -50,9 +54,18 @@ companyRouter.post('/signup', async (req, res) => {
             JWT_SECRET // Import secret from config
         );
 
+        // // Create token account
+        // const signature= await createTokenAccount(publicKey);
+
+        // if (!signature) {
+
+        //     return res.status(500).json({ message: "Error creating token account" });
+        // }
+        console.log(createTokenAccount);
         res.status(201).json({ 
             message: "Company registered successfully",
-            token
+            token,
+            // signature
         });
     } catch (error) {
         if (error instanceof zod.ZodError) {
