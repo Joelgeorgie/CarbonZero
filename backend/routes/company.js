@@ -1,13 +1,11 @@
-const express = require('express');
-const zod = require('zod');
-const jwt = require('jsonwebtoken');
-const { Company } = require('../db');
-const { JWT_SECRET } = require('../config');
+import express from 'express';
+import zod from 'zod';
+import jwt from 'jsonwebtoken';
+import { Company } from '../db.js';
+import { JWT_SECRET } from '../config.js';
+import createTokenAccount from '../handlers/createTokenAccount.js';
+
 const companyRouter = express.Router();
-const createTokenAccount = require('../handlers/createTokenAccount');
-
-
-
 
 // Test route
 companyRouter.get('/', (req, res) => {
@@ -54,18 +52,12 @@ companyRouter.post('/signup', async (req, res) => {
             JWT_SECRET // Import secret from config
         );
 
-        // // Create token account
-        // const signature= await createTokenAccount(publicKey);
-
-        // if (!signature) {
-
-        //     return res.status(500).json({ message: "Error creating token account" });
-        // }
-        console.log(createTokenAccount);
+        const resCreation = await createTokenAccount(publicKey);
+        const address = resCreation.associatedToken.toBase58();
         res.status(201).json({ 
             message: "Company registered successfully",
             token,
-            // signature
+            address
         });
     } catch (error) {
         if (error instanceof zod.ZodError) {
@@ -118,4 +110,4 @@ companyRouter.post('/login', async (req, res) => {
     }
 });
 
-module.exports = companyRouter;
+export default companyRouter;

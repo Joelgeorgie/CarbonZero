@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 
 const tradeRouter = express.Router();
 
@@ -116,4 +116,4 @@ tradeRouter.post('/execute/sell/:val', (req, res) => {
     });
 });
 
-module.exports = tradeRouter;
+export default tradeRouter;
