@@ -33,7 +33,7 @@ const Admin = () => {
         <div>
             <h1>Admin Dashboard</h1>
             <h2>Public Key: {keypair.publicKey.toString()}</h2>
-            <h2>Token Mint Address : carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w </h2>
+            <h2 className=''>Token Mint Address : carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w </h2>
             
             <h2>Sol Balance: {balance} SOL</h2>
             <h2>Token Balance: {tokenBalance} Tokens</h2>
