@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { keypairA } from '../Recoil/atoms';
+import { useRecoilValue,useRecoilState } from 'recoil';
+import { keypairA ,transactionCount } from '../Recoil/atoms';
 import useBalance from '../hooks/useBalance';
 import useTokenBalance from '../hooks/useTokenBalance'; 
 import bs58 from 'bs58';
@@ -10,19 +10,22 @@ import burnTokens from '../solana-requests/burnTokens';
 
 const Admin = () => {
     const keypair = useRecoilValue(keypairA);
-    const balance = useBalance(keypair);
-    const tokenBalance = useTokenBalance(keypair.publicKey);
+    const [transactionNo,setTransactionNo] = useRecoilState(transactionCount);
+    const balance = useBalance(keypair,transactionNo);
+    const tokenBalance = useTokenBalance(keypair.publicKey,transactionNo);
     const [mintAmount, setMintAmount] = useState(0);
     const [burnAmount, setBurnAmount] = useState(0);
 
     const mintCZ = async () => {
         const signature = await mintTo(keypair, mintAmount);
         console.log(signature);
+        setTransactionNo((prev)=>prev+1);
     }
 
     const burnCZ = async () => {
         const signature = await burnTokens(keypair, burnAmount);
         console.log(signature);
+        setTransactionNo((prev)=>prev+1);
     }
 
 
@@ -30,7 +33,7 @@ const Admin = () => {
         <div>
             <h1>Admin Dashboard</h1>
             <h2>Public Key: {keypair.publicKey.toString()}</h2>
-            <h2>Private Key: {bs58.encode(keypair.secretKey)}</h2>
+            <h2>Token Mint Address : carQ4YQfUsjDRVwWXTvUxW5DwXWo5uCU7YuN9frvJ4w </h2>
             
             <h2>Sol Balance: {balance} SOL</h2>
             <h2>Token Balance: {tokenBalance} Tokens</h2>

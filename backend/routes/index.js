@@ -1,7 +1,7 @@
 import express from 'express';
 import companyRouter from './company.js';
 import tradeRouter from './trade.js';
-// import accountRouter from './account.js';
+import depositRouter from './deposit.js';
 
 const router = express.Router();
 
@@ -12,6 +12,6 @@ router.get('/', (req, res, next) => {
 
 router.use('/companies', companyRouter);
 router.use('/trade', tradeRouter);
-// router.use('/account', accountRouter);
+router.use('/deposit', depositRouter);
 
 export default router;

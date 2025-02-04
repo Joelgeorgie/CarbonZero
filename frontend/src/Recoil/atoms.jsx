@@ -13,6 +13,10 @@ const privateKeyA = atom({
   default: null,         
 });
 
+const transactionCount = atom({
+  key: 'transactionCount', 
+  default: 0,         
+});
 
 
 // Selector for deriving the Keypair class instance
@@ -56,4 +60,6 @@ const parsedTokenA = selector({
 
 
 
-export { tokenA, privateKeyA, keypairA , parsedTokenA  };
+
+
+export { tokenA, privateKeyA, keypairA , parsedTokenA ,transactionCount };

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddressSync ,TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
 
-const useTokenBalance = ( userPublicKey) => {
+const useTokenBalance = ( userPublicKey,transactionNo) => {
     const [balance, setBalance] = useState(null);
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const useTokenBalance = ( userPublicKey) => {
                 
                 const amount =await connection.getTokenAccountBalance(associatedTokenAccount);
 
-                // Set the balance (amount is in the smallest unit, e.g., lamports for SOL)
+                
                 setBalance(amount.value.uiAmount);
                 
             } catch (error) {
@@ -39,10 +39,10 @@ const useTokenBalance = ( userPublicKey) => {
 
         fetchTokenBalance();
 
-        // Optionally, you can set up an interval to poll the balance periodically
-        const intervalId = setInterval(fetchTokenBalance, 20 * 1000); // Poll every 20 seconds
-        return () => clearInterval(intervalId); // Cleanup on unmount
-    }, [ userPublicKey]);
+        
+        const intervalId = setInterval(fetchTokenBalance, 20 * 1000); 
+        return () => clearInterval(intervalId); 
+    }, [ userPublicKey,transactionNo]);
 
     return balance;
 };
