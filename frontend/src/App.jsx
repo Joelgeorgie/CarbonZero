@@ -22,7 +22,7 @@ function App() {
     }, []);  
 
     return (
-        <>
+        <><div className='w-full'>
             <Routes>
                 {/* Public Routes */}
                 {!(token && privateKey) ? (
@@ -39,6 +39,7 @@ function App() {
                     </>
                 )}
             </Routes>
+            </div>
             </>
     );
 }

@@ -1,108 +1,155 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import executeBuy from '../solana-requests/executeBuy';
-import executeSell from '../solana-requests/executeSell';
-import { useRecoilValue ,useRecoilState } from 'recoil';
-import { keypairA, tokenA ,transactionCount} from '../Recoil/atoms';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import executeBuy from "../solana-requests/executeBuy";
+import executeSell from "../solana-requests/executeSell";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { keypairA, tokenA, transactionCount } from "../Recoil/atoms";
 
 const TradeComponent = () => {
-    const [tradeAmount, setTradeAmount] = useState(1);
-    const keypair = useRecoilValue(keypairA);
-    const authToken = useRecoilValue(tokenA);
-    const [transactionNo,setTransactionNo] = useRecoilState(transactionCount);
-    const [quote, setQuote] = useState({ buy: 0, sell: 0 });
+  const [tradeAmount, setTradeAmount] = useState(1);
+  const keypair = useRecoilValue(keypairA);
+  const authToken = useRecoilValue(tokenA);
+  const [transactionNo, setTransactionNo] = useRecoilState(transactionCount);
+  const [quote, setQuote] = useState({ buy: 0, sell: 0 });
+  const [buySelect, setBuySelect] = useState(true);
 
-    // Function to fetch buy and sell quotes
-    const fetchQuotes = async () => {
-        const reqAmount = parseInt(tradeAmount);
-        if (isNaN(reqAmount) || !Number.isInteger(reqAmount)) {
-            console.log('Trade amount must be an integer');
-            setQuote({
-                buy: 0, 
-                sell: 0, 
-            });
+  // Function to fetch buy and sell quotes
+  const fetchQuotes = async () => {
+    const reqAmount = parseInt(tradeAmount);
+    if (isNaN(reqAmount) || !Number.isInteger(reqAmount)) {
+      console.log("Trade amount must be an integer");
+      setQuote({
+        buy: 0,
+        sell: 0,
+      });
 
-            return;
-        }
-        try {
-            const buyResponse = await axios.get(
-                `http://localhost:3000/api/v1/trade/quote/buy/${reqAmount}`
-            );
+      return;
+    }
+    try {
+      const buyResponse = await axios.get(
+        `http://localhost:3000/api/v1/trade/quote/buy/${reqAmount}`
+      );
 
-            const sellResponse = await axios.get(
-                `http://localhost:3000/api/v1/trade/quote/sell/${reqAmount}`
-            );
+      const sellResponse = await axios.get(
+        `http://localhost:3000/api/v1/trade/quote/sell/${reqAmount}`
+      );
+
+      setQuote({
+        buy: buyResponse.data.solAmount,
+        sell: sellResponse.data.solAmount,
+      });
+    } catch (error) {
+      setQuote({
+        buy: 0,
+        sell: 0,
+      });
+      console.error("Error fetching quotes:", error);
+    }
+  };
+
+  // useEffect to fetch quotes when tradeAmount changes
+  useEffect(() => {
+    fetchQuotes(); // Fetch quotes immediately when tradeAmount changes
+  }, [tradeAmount]);
+
+  // useEffect to fetch quotes every 10 seconds
+  // useEffect(() => {
+  //     const interval = setInterval(() => {
+  //         fetchQuotes(); // Fetch quotes every 10 seconds
+  //     }, 10000); // 10 seconds
+
+  //     return () => clearInterval(interval); // Cleanup interval on component unmount
+  // }, []);
+
+  const sellTokens = async () => {
+    if (isNaN(tradeAmount) || !Number.isInteger(parseFloat(tradeAmount))) {
+      console.log("Trade amount must be an integer");
+      return;
+    }
+    const signature = await executeSell(keypair, tradeAmount, authToken);
+    console.log(signature);
+    setTransactionNo((prev) => prev + 1);
+    fetchQuotes();
+  };
+
+  const buyTokens = async () => {
+    if (isNaN(tradeAmount) || !Number.isInteger(parseFloat(tradeAmount))) {
+      console.log("Trade amount must be an integer");
+      return;
+    }
+    const signature = await executeBuy(keypair, tradeAmount, authToken);
+    console.log(signature);
+    setTransactionNo((prev) => prev + 1);
+    fetchQuotes();
+  };
+
+  return (
+    <div className="space-y-4 flex flex-col items-center w-full">
+      <h2 className="text-xl font-semibold text-start text-gray-100 border-b-2 border-gray-900 w-full pb-5">
+        Trade
+      </h2>
+
+      <div className="w-full h-15  text-base mt-7">
+        {buySelect ? (
+          <div className="flex flex-row  w-full justify-between px-10">
+            <input
+              placeholder="Token Amount"
+              value={tradeAmount}
+              onChange={(e) => setTradeAmount(e.target.value)}
+              className=" w-[30%] px-4 py-2 border border-gray-900 bg-gray-700 text-white text-center  rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
+            />
+            <button
+              className="w-[10%] rounded-b-full bg-gray-900"
+              onClick={(e) => {
+                setBuySelect(!buySelect);
+              }}
+            >{"<=>"}</button>
+            <label className="text-red-400 w-[30%] text-center flex items-center justify-center ">- {quote.buy}</label>
+          </div>
+        ) : (
+          <div className="flex flex-row  w-full justify-between px-10">
+            <label className="text-green-400 w-[30%] text-center flex items-center justify-center">+ {quote.sell}</label>
             
-            setQuote({
-                buy: buyResponse.data.solAmount, 
-                sell: sellResponse.data.solAmount, 
-            });
-        } catch (error) {
-            setQuote({
-                buy: 0, 
-                sell: 0, 
-            });
-            console.error('Error fetching quotes:', error);
-        }
-    };
-
-    // useEffect to fetch quotes when tradeAmount changes
-    useEffect(() => {
-        fetchQuotes(); // Fetch quotes immediately when tradeAmount changes
-    }, [tradeAmount]);
-
-    // useEffect to fetch quotes every 10 seconds
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         fetchQuotes(); // Fetch quotes every 10 seconds
-    //     }, 10000); // 10 seconds
-
-    //     return () => clearInterval(interval); // Cleanup interval on component unmount
-    // }, []);
-
-    const sellTokens = async () => {
-        if (isNaN(tradeAmount) || !Number.isInteger(parseFloat(tradeAmount))) {
-            console.log('Trade amount must be an integer');
-            return;
-        }
-        const signature = await executeSell(keypair, tradeAmount, authToken);
-        console.log(signature);
-        setTransactionNo((prev)=>prev+1);
-        fetchQuotes()
-    };
-
-    const buyTokens = async () => {
-        if (isNaN(tradeAmount) || !Number.isInteger(parseFloat(tradeAmount))) {
-            console.log('Trade amount must be an integer');
-            return;
-        }
-        const signature = await executeBuy(keypair, tradeAmount, authToken);
-        console.log(signature);
-        setTransactionNo((prev)=>prev+1);
-        fetchQuotes()
-    };
-
-    return (
-        <div>
-            <h2>Trade Tokens</h2>
-            <label>Buy Quote: {quote.buy}</label>
-            <button onClick={buyTokens} style={{ marginBottom: '20px', marginRight: '10px' }}>
-                Buy Tokens
-            </button>
+            <button
+              className="w-[10%] rounded-b-full bg-gray-900"
+              onClick={(e) => {
+                setBuySelect(!buySelect);
+              }}
+            > {"<=>"}</button>
 
             <input
-                type="number"
-                placeholder="Token Amount"
-                value={tradeAmount}
-                onChange={(e) => setTradeAmount(e.target.value)}
+              placeholder="Token Amount"
+              value={tradeAmount}
+              onChange={(e) => setTradeAmount(e.target.value)}
+              className=" w-[30%] px-4 py-2 bg-gray-700 text-white text-center  rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
             />
+            
+          </div>
+        )}
+      </div>
 
-            <button onClick={sellTokens} style={{ marginBottom: '20px' }}>
-                Sell Tokens
-            </button>
-            <label>Sell Quote: {quote.sell}</label>
-        </div>
-    );
+      <div className="flex justify-center space-x-4">
+        {buySelect ? (
+        <button
+          onClick={buyTokens}
+          className="px-4 py-2 font-semibold  text-gray-900 bg-green-400 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-200 w-24"
+        >
+          Buy
+        </button>) : (
+            <button
+            onClick={sellTokens}
+            className="px-4 py-2 font-semibold text-gray-900 bg-red-400  rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-200 w-24"
+          >
+            Sell
+          </button>
+            
+        )}
+        
+        
+        
+      </div>
+    </div>
+  );
 };
 
 export default TradeComponent;

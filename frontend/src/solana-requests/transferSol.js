@@ -17,13 +17,15 @@ import {
   
     // Define the recipient's public key
     const toAddress = new PublicKey(to);
-  
+    
+    const roundAmount = parseFloat(amount);
+    
     // Create a transfer instruction using SystemProgram
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: authority.publicKey,
         toPubkey: toAddress,
-        lamports: amount * LAMPORTS_PER_SOL, // Convert SOL to lamports
+        lamports: Math.floor(roundAmount * LAMPORTS_PER_SOL), // Convert SOL to lamports
       })
     );
   

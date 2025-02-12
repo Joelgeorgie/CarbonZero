@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Keypair } from '@solana/web3.js'; 
+import { Keypair } from '@solana/web3.js';
 import bs58 from 'bs58';
 import { Link } from 'react-router-dom';
-import { tokenA ,privateKeyA } from '../Recoil/atoms';
+import { tokenA, privateKeyA } from '../Recoil/atoms';
 import { useRecoilState } from 'recoil';
 
 const Signup = () => {
@@ -47,12 +47,11 @@ const Signup = () => {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.token) {
-                        console.log('Success:', data.message, data.token,data.errors);
+                        console.log('Success:', data.message, data.token, data.errors);
                         localStorage.setItem('token', 'Bearer ' + data.token); // Save token to localStorage
                         localStorage.setItem('privateKey', formData.privateKey); // Store the private key as Base58
                         setToken(localStorage.getItem('token'));
                         setPrivateKey(localStorage.getItem('privateKey'));
-                        
                     } else {
                         console.error('Error:', data);
                     }
@@ -67,56 +66,72 @@ const Signup = () => {
     };
 
     return (
-        <div>
-            <h1>Signup</h1>
-            <form onSubmit={handleSignup}>
-                <label>
-                    Company name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Solana Private Key (Base58-encoded):
-                    <input
-                        type="text"
-                        name="privateKey"
-                        value={formData.privateKey}
-                        onChange={handleInputChange}
-                        placeholder="Enter your Base58 private key"
-                    />
-                </label>
-                <br />
-                <label>
-                    CZ Total:
-                    <input
-                        type="number"
-                        name="czTotal"
-                        value={formData.czTotal}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <br />
-                <button type="submit">Signup</button>
-            </form>
-
-            <p>
-                Already have an account? <Link to="/login">Login here</Link>
-            </p>
+        <div className="min-h-screen flex items-center justify-center bg-gray-900">
+            <div className="w-full max-w-md bg-gray-800 p-12 rounded-lg shadow-lg">
+                <h1 className="text-3xl font-semibold text-center text-green-400 mb-8">Sign Up</h1>
+                <form onSubmit={handleSignup}>
+                    <div className="mb-6">
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-300">Company Name</label>
+                        <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            placeholder="Enter your company name"
+                            className="mt-2 w-full px-4 py-3 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 text-gray-200"
+                        />
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            value={formData.password}
+                            onChange={handleInputChange}
+                            placeholder="Enter your password"
+                            className="mt-2 w-full px-4 py-3 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 text-gray-200"
+                        />
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="privateKey" className="block text-sm font-medium text-gray-300">Solana Private Key </label>
+                        <input
+                            type="text"
+                            name="privateKey"
+                            id="privateKey"
+                            value={formData.privateKey}
+                            onChange={handleInputChange}
+                            placeholder="Enter your Base58 private key"
+                            className="mt-2 w-full px-4 py-3 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 text-gray-200"
+                        />
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="czTotal" className="block text-sm font-medium text-gray-300">CZ Total</label>
+                        <input
+                            type="number"
+                            name="czTotal"
+                            id="czTotal"
+                            value={formData.czTotal}
+                            onChange={handleInputChange}
+                            placeholder="Enter the total CZ amount"
+                            className="mt-2 w-full px-4 py-3 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 text-gray-200"
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-green-400 text-gray-900 py-3 rounded-lg hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        Sign Up
+                    </button>
+                </form>
+                <p className="mt-6 text-center text-sm text-gray-400">
+                    Already have an account?{' '}
+                    <Link to="/login" className="text-green-400 hover:text-green-500">
+                        Login here
+                    </Link>
+                </p>
+            </div>
         </div>
     );
 };
