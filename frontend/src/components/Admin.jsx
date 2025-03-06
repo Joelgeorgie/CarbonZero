@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { keypairA, transactionCount } from "../Recoil/atoms";
+import { keypairA, transactionCount ,transactionLogs ,alertState } from "../Recoil/atoms";
 import useBalance from "../hooks/useBalance";
 import useTokenBalance from "../hooks/useTokenBalance";
+import RegulateSupply from "./RegulateSupply";
+import Companies from "./Companies";
+import { useNavigate } from "react-router-dom";
 
-import mintTo from "../solana-requests/mintTokens";
-import burnTokens from "../solana-requests/burnTokens";
+
 import LineData from "./LineData";
 
 const Admin = () => {
@@ -13,26 +15,41 @@ const Admin = () => {
   const [transactionNo, setTransactionNo] = useRecoilState(transactionCount);
   const balance = useBalance(keypair, transactionNo);
   const tokenBalance = useTokenBalance(keypair.publicKey, transactionNo);
-  const [amount, setAmount] = useState(0);
+  const [transactionState,setTransactionState] = useRecoilState(transactionLogs);
+  const [alert, setAlert] = useRecoilState(alertState);
+  const navigate = useNavigate();
 
-  const mintCZ = async () => {
-    const signature = await mintTo(keypair, amount);
-    console.log(signature);
-    setTransactionNo((prev) => prev + 1);
-  };
+  useEffect(() => {
+      console.log(transactionState);
+    
+      if (transactionState.length > 0) {
+        const lastTransaction = transactionState[transactionState.length - 1];
+        setAlert({
+          type: lastTransaction.type,
+          message: lastTransaction.message,
+          signature: lastTransaction.signature,
+        });
+    
+        setTimeout(() => {
+          setAlert(null);
+        }, 5000);
+        
+      }
+    }, [transactionNo]);
 
-  const burnCZ = async () => {
-    const signature = await burnTokens(keypair, amount);
-    console.log(signature);
-    setTransactionNo((prev) => prev + 1);
-  };
+  
 
   return (
-    <div className="flex flex-row items-start justify-between p-15 min-h-screen bg-gray-900 text-white">
+    <div className="flex flex-col h-full bg-gray-900">
+    <div className="flex flex-row items-start justify-between p-15 h-[90%]  text-white">
       <div className="w-[50%] max-w-4xl p-6 space-y-6 bg-gray-800  rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold text-start border-b-2 border-gray-900 pb-5">
+        <div className=" font-bold  justify-between border-b-2 border-gray-900 pb-5 flex">
+        <h1 className="text-2xl">
           Admin{" "}
         </h1>
+        <div className="text-xs flex text-center justify-center items-end cursor-pointer" onClick={() => navigate('/companies')}>Company List</div>
+        </div>
+        
         <div className="space-y-4 ">
           <LineData
             key={1}
@@ -47,37 +64,16 @@ const Admin = () => {
             canCopied={true}
           />
           <LineData key={3} name="Sol Balance" value={`${balance}`} />
-          <LineData key={4} name="Token Balance" value={`${tokenBalance}`} />
+          <LineData key={4} name="CZ Balance" value={`${tokenBalance}`} />
         </div>
-      </div>
-
-      <div className="w-[40%] max-w-4xl  space-y-6 bg-gray-800  rounded-lg shadow-lg p-6 flex flex-col justify  ">
-        <h1 className="text-2xl font-bold border-b-2 border-gray-900 pb-5">
-          Regulate Supply
-        </h1>
-        <div className="flex flex-col items-center justify-center w-full my-5">
-          <input
-            placeholder="Amount"
-            className="w-[50%] text-center px-4 py-2  rounded-md  border-gray-900 border-2"
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <div className="flex flex-row  items-center justify-evenly w-full mt-6 ">
-            <button
-              onClick={mintCZ}
-              className="px-4 py-2 font-bold  bg-green-400 rounded-md hover:bg-green-600"
-            >
-              Mint Tokens
-            </button>
-
-            <button
-              onClick={burnCZ}
-              className="px-4 py-2 font-bold  text-white bg-green-400 rounded-md hover:bg-green-600"
-            >
-              Burn Tokens
-            </button>
-          </div>
+      </div >
+        <div className="w-[40%] max-w-4xl  space-y-6">
+          <RegulateSupply/>
+          
         </div>
+        
       </div>
+      {/* <div></div> */}
     </div>
   );
 };

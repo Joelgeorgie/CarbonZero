@@ -18,6 +18,16 @@ const transactionCount = atom({
   default: 0,         
 });
 
+const transactionLogs = atom({
+    key: 'transactionLogs',
+    default: []
+});
+
+const alertState = atom({
+  key: 'alertState',
+  default: null, // Initially, no alerts
+});
+
 
 // Selector for deriving the Keypair class instance
 const keypairA = selector({
@@ -62,4 +72,4 @@ const parsedTokenA = selector({
 
 
 
-export { tokenA, privateKeyA, keypairA , parsedTokenA ,transactionCount };
+export { tokenA, privateKeyA, keypairA , parsedTokenA ,transactionCount,alertState,transactionLogs };

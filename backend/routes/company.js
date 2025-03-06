@@ -13,6 +13,42 @@ companyRouter.get('/', (req, res) => {
     res.end();
 });
 
+
+// Get all companies (excluding password)
+companyRouter.get('/all', async (req, res) => {
+    try {
+        const companies = await Company.find({}, '-password'); // Exclude password
+        res.status(200).json({ companies });
+    } catch (error) {
+        console.error("Error fetching all companies:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+// Get companies with czTotal = 0 (excluding password)
+companyRouter.get('/cztotal-zero', async (req, res) => {
+    try {
+        const companies = await Company.find({ czTotal: 0 }, '-password');
+        res.status(200).json({ companies });
+    } catch (error) {
+        console.error("Error fetching companies with czTotal = 0:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+// Get companies with czTotal != 0 (excluding password)
+companyRouter.get('/cztotal-nonzero', async (req, res) => {
+    try {
+        const companies = await Company.find({ czTotal: { $ne: 0 } }, '-password');
+        res.status(200).json({ companies });
+    } catch (error) {
+        console.error("Error fetching companies with czTotal != 0:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+
+
 // Signup route
 companyRouter.post('/signup', async (req, res) => {
     // Zod schema for validating request body

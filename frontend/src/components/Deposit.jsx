@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { keypairA, transactionCount, tokenA } from '../Recoil/atoms';
+import { keypairA, transactionCount, tokenA, transactionLogs } from '../Recoil/atoms';
 import executeDeposit from '../solana-requests/executeDeposit';
 
 const Deposit = () => {
@@ -8,11 +8,16 @@ const Deposit = () => {
     const [transactionNo, setTransactionNo] = useRecoilState(transactionCount);
     const [authToken, setAuthToken] = useRecoilState(tokenA);
     const [depositAmount, setDepositAmount] = useState(0);
+    const [transactionState,setTransactionState] = useRecoilState(transactionLogs);
 
     const deposit = async () => {
         const signature = await executeDeposit(keypair, depositAmount, authToken);
         console.log(signature);
         setTransactionNo((prev) => prev + 1);
+        setTransactionState((prev) => [
+            ...prev,
+            { type: "deposit", signature, message:"Amount deposited"  },
+          ]);
     };
 
     return (

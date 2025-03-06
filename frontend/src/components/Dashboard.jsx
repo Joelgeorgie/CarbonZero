@@ -20,7 +20,7 @@ const Dashboard = () => {
     const isAdmin = keypair.publicKey.toString() === adminPublicKey;
 
     return (
-        <div className='w-full '>
+        <div className='w-full h-screen'>
             <Navbar/>
             {isAdmin ? <Admin /> : <User />}
         </div>

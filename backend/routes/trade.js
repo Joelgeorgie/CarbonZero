@@ -75,8 +75,6 @@ tradeRouter.post('/execute/buy/:val',authMiddleware,async (req, res) => {
     const newTotalCZ = totalCZ - czAmount;
     const solAmount = (k / newTotalCZ)-totalSol;
 
-
-
     if (czAmount <= 0) {
         return res.status(400).json({ error: "Trade results in insufficient CZ in the pool" });
     }
@@ -112,8 +110,6 @@ tradeRouter.post('/execute/sell/:val',authMiddleware, async (req, res) => {
     if (solAmount <= 0) {
         return res.status(400).json({ error: "Trade results in insufficient SOL in the pool" });
     }
-
-
 
     // Update reserves
     totalCZ = newTotalCZ;

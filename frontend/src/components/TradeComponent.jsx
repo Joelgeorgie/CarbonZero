@@ -3,7 +3,7 @@ import axios from "axios";
 import executeBuy from "../solana-requests/executeBuy";
 import executeSell from "../solana-requests/executeSell";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { keypairA, tokenA, transactionCount } from "../Recoil/atoms";
+import { keypairA, tokenA, transactionCount,transactionLogs } from "../Recoil/atoms";
 
 const TradeComponent = () => {
   const [tradeAmount, setTradeAmount] = useState(1);
@@ -12,6 +12,7 @@ const TradeComponent = () => {
   const [transactionNo, setTransactionNo] = useRecoilState(transactionCount);
   const [quote, setQuote] = useState({ buy: 0, sell: 0 });
   const [buySelect, setBuySelect] = useState(true);
+  const [transactionState,setTransactionState] = useRecoilState(transactionLogs);
 
   // Function to fetch buy and sell quotes
   const fetchQuotes = async () => {
@@ -68,10 +69,19 @@ const TradeComponent = () => {
     }
     const signature = await executeSell(keypair, tradeAmount, authToken);
     console.log(signature);
+    
+    // Update transaction count
     setTransactionNo((prev) => prev + 1);
+    
+    // Append new transaction to transactionState
+    setTransactionState((prev) => [
+      ...prev,
+      { type: "sell", signature ,message:"Sell Order Executed" },
+    ]);
+  
     fetchQuotes();
   };
-
+  
   const buyTokens = async () => {
     if (isNaN(tradeAmount) || !Number.isInteger(parseFloat(tradeAmount))) {
       console.log("Trade amount must be an integer");
@@ -79,9 +89,19 @@ const TradeComponent = () => {
     }
     const signature = await executeBuy(keypair, tradeAmount, authToken);
     console.log(signature);
+    
+    // Update transaction count
     setTransactionNo((prev) => prev + 1);
+    
+    // Append new transaction to transactionState
+    setTransactionState((prev) => [
+      ...prev,
+      { type: "buy", signature ,message:"Buy Order Executed" },
+    ]);
+  
     fetchQuotes();
   };
+  
 
   return (
     <div className="space-y-4 flex flex-col items-center w-full">
@@ -99,7 +119,7 @@ const TradeComponent = () => {
               className=" w-[30%] px-4 py-2 border border-gray-900 bg-gray-700 text-white text-center  rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
             />
             <button
-              className="w-[10%] rounded-b-full bg-gray-900"
+              className="w-[10%] rounded-b-full bg-gray-900 text-xl"
               onClick={(e) => {
                 setBuySelect(!buySelect);
               }}

@@ -109,7 +109,7 @@ const Signup = () => {
                     <div className="mb-6">
                         <label htmlFor="czTotal" className="block text-sm font-medium text-gray-300">CZ Total</label>
                         <input
-                            type="number"
+                            // type="number"
                             name="czTotal"
                             id="czTotal"
                             value={formData.czTotal}
