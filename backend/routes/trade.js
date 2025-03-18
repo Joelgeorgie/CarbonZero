@@ -15,6 +15,16 @@ tradeRouter.get('/',authMiddleware, (req, res) => {
     res.send("Trade Router Working fine");
 });
 
+
+// Get current reserves
+tradeRouter.get('/reserves', (req, res) => {
+    res.json({
+        totalSol,
+        totalCZ
+    });
+});
+
+
 // Quote buy  CZ for SOL
 tradeRouter.get('/quote/buy/:val', (req, res) => {
     const czAmount = parseFloat(req.params.val); // Amount of SOL to quote

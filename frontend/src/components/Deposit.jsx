@@ -21,16 +21,16 @@ const Deposit = () => {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 p-6  rounded-lg shadow-lg bg-gray-800 mt-12">
             <h2 className="text-xl font-semibold text-start text-gray-100 border-b-2 border-gray-900 w-full pb-5">
                 Deposit
             </h2>
-            <div className="flex items-center justify-between mt-10 px-10">
+            <div className="flex items-center justify-between mt-5 ">
                 <input
                     
                     placeholder="Amount"
                     onChange={(e) => setDepositAmount(e.target.value)}
-                    className="w-[40%] px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-md focus:ring  "
+                    className="w-[40%] px-4 py-2 rounded-md border-gray-900 border-2  focus:ring text-center "
                 />
                 <button
                     onClick={deposit}

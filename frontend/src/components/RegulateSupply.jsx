@@ -8,8 +8,7 @@ const RegulateSupply = () => {
   const [transactionNo, setTransactionNo] = useRecoilState(transactionCount);
   const keypair = useRecoilValue(keypairA);
   const [amount, setAmount] = useState(0);
-  const [transactionState, setTransactionState] =
-    useRecoilState(transactionLogs);
+  const [transactionState, setTransactionState] =useRecoilState(transactionLogs);
 
   const mintCZ = async () => {
     const signature = await mintTo(keypair, amount);
@@ -32,7 +31,7 @@ const RegulateSupply = () => {
   };
 
   return (
-    <div className=" bg-gray-800  rounded-lg shadow-lg p-6 flex flex-col justify  ">
+    <div className=" bg-gray-800  rounded-lg shadow-lg p-6 flex flex-col  ">
       <h1 className="text-2xl font-bold border-b-2 border-gray-900 pb-5">
         Regulate Supply
       </h1>

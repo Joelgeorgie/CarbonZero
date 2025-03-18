@@ -65,6 +65,11 @@ const TradeComponent = () => {
   const sellTokens = async () => {
     if (isNaN(tradeAmount) || !Number.isInteger(parseFloat(tradeAmount))) {
       console.log("Trade amount must be an integer");
+      setTransactionNo((prev) => prev + 1);
+      setTransactionState((prev) => [
+        ...prev,
+        { type: "error" ,message:"Amount not valid" },
+      ]);
       return;
     }
     const signature = await executeSell(keypair, tradeAmount, authToken);
@@ -85,6 +90,11 @@ const TradeComponent = () => {
   const buyTokens = async () => {
     if (isNaN(tradeAmount) || !Number.isInteger(parseFloat(tradeAmount))) {
       console.log("Trade amount must be an integer");
+      setTransactionNo((prev) => prev + 1);
+      setTransactionState((prev) => [
+        ...prev,
+        { type: "error" ,message:"Amount not valid" },
+      ]);
       return;
     }
     const signature = await executeBuy(keypair, tradeAmount, authToken);
@@ -104,7 +114,7 @@ const TradeComponent = () => {
   
 
   return (
-    <div className="space-y-4 flex flex-col items-center w-full">
+    <div className="space-y-4 flex flex-col items-center w-full p-6  rounded-lg shadow-lg bg-gray-800 mb-15">
       <h2 className="text-xl font-semibold text-start text-gray-100 border-b-2 border-gray-900 w-full pb-5">
         Trade
       </h2>
@@ -116,7 +126,7 @@ const TradeComponent = () => {
               placeholder="Token Amount"
               value={tradeAmount}
               onChange={(e) => setTradeAmount(e.target.value)}
-              className=" w-[30%] px-4 py-2 border border-gray-900 bg-gray-700 text-white text-center  rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
+              className=" w-[30%] px-4 py-2 rounded-md border-gray-900 border-2 text-center focus:ring focus:ring-indigo-200 focus:outline-none"
             />
             <button
               className="w-[10%] rounded-b-full bg-gray-900 text-xl"
@@ -141,7 +151,7 @@ const TradeComponent = () => {
               placeholder="Token Amount"
               value={tradeAmount}
               onChange={(e) => setTradeAmount(e.target.value)}
-              className=" w-[30%] px-4 py-2 bg-gray-700 text-white text-center  rounded-md focus:ring focus:ring-indigo-200 focus:outline-none"
+              className=" w-[30%] px-4 py-2 rounded-md border-gray-900 border-2 text-center focus:ring focus:ring-indigo-200 focus:outline-none"
             />
             
           </div>
